@@ -164,6 +164,8 @@ export function normalizeEntities(
         compact_events_to_show?: number;
         blocklist?: string;
         allowlist?: string;
+        description_blocklist?: string;
+        description_allowlist?: string;
         split_multiday_events?: boolean;
       }
   >,
@@ -195,6 +197,8 @@ export function normalizeEntities(
           compact_events_to_show: item.compact_events_to_show,
           blocklist: item.blocklist,
           allowlist: item.allowlist,
+          description_blocklist: item.description_blocklist,
+          description_allowlist: item.description_allowlist,
           split_multiday_events: item.split_multiday_events,
         };
       }
