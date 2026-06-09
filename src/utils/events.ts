@@ -829,7 +829,7 @@ function splitMultiDayEvent(event: Types.CalendarEventData): Types.CalendarEvent
 
 /**
  * Filter events for a specific entity configuration
- * Applies allowlist/blocklist filters
+ * Applies allowlist/blocklist filters on summary and description
  */
 function filterEventsForEntity(
   events: Types.CalendarEventData[],
@@ -843,7 +843,7 @@ function filterEventsForEntity(
   // Start with all events
   let matchedEvents = [...events];
 
-  // Apply allowlist if specified (has precedence over blocklist)
+  // Apply summary allowlist if specified (has precedence over blocklist)
   if (entityConfig.allowlist) {
     try {
       const allowPattern = new RegExp(entityConfig.allowlist, 'i');
@@ -854,7 +854,7 @@ function filterEventsForEntity(
       Logger.warn(`Invalid allowlist pattern: ${entityConfig.allowlist}`, error);
     }
   }
-  // Apply blocklist if no allowlist was specified
+  // Apply summary blocklist if no allowlist was specified
   else if (entityConfig.blocklist) {
     try {
       const blockPattern = new RegExp(entityConfig.blocklist, 'i');
@@ -863,6 +863,29 @@ function filterEventsForEntity(
       );
     } catch (error) {
       Logger.warn(`Invalid blocklist pattern: ${entityConfig.blocklist}`, error);
+    }
+  }
+
+  // Apply description allowlist if specified (has precedence over description_blocklist)
+  if (entityConfig.description_allowlist) {
+    try {
+      const descAllowPattern = new RegExp(entityConfig.description_allowlist, 'i');
+      matchedEvents = matchedEvents.filter(
+        (event) => event.description && descAllowPattern.test(event.description),
+      );
+    } catch (error) {
+      Logger.warn(`Invalid description_allowlist pattern: ${entityConfig.description_allowlist}`, error);
+    }
+  }
+  // Apply description blocklist if no description_allowlist was specified
+  else if (entityConfig.description_blocklist) {
+    try {
+      const descBlockPattern = new RegExp(entityConfig.description_blocklist, 'i');
+      matchedEvents = matchedEvents.filter(
+        (event) => !(event.description && descBlockPattern.test(event.description)),
+      );
+    } catch (error) {
+      Logger.warn(`Invalid description_blocklist pattern: ${entityConfig.description_blocklist}`, error);
     }
   }
 

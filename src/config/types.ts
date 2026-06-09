@@ -133,6 +133,8 @@ export interface EntityConfig {
   compact_events_to_show?: number;
   blocklist?: string;
   allowlist?: string;
+  description_blocklist?: string;
+  description_allowlist?: string;
   split_multiday_events?: boolean;
 }
 
